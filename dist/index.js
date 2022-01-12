@@ -165,6 +165,21 @@ function checkGlobs(changedFiles, globs) {
     return false;
 }
 exports.checkGlobs = checkGlobs;
+function isMatchOr(changedFile, matchers) {
+    core.debug(`    matching patterns against file ${changedFile}`);
+    for (const matcher of matchers) {
+        core.debug(`   - ${printPattern(matcher)}`);
+        if (!matcher.match(changedFile)) {
+            core.debug(`   ${printPattern(matcher)} did not match`);
+        }
+        else {
+            core.debug(`   ${printPattern(matcher)} matches`);
+            return true;
+        }
+    }
+    core.debug(`   no pattern matched`);
+    return false;
+}
 function isMatch(changedFile, matchers) {
     core.debug(`    matching patterns against file ${changedFile}`);
     for (const matcher of matchers) {
@@ -194,7 +209,7 @@ function checkAnyOr(changedFiles, globs) {
     const matchers = globs.map((g) => new minimatch_1.Minimatch(g));
     core.debug(`  checking "anyor" patterns`);
     for (const changedFile of changedFiles) {
-        if (isMatch(changedFile, matchers)) {
+        if (isMatchOr(changedFile, matchers)) {
             core.debug(`  "anyor" patterns matched against ${changedFile}`);
         }
         else {
