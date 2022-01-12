@@ -6,6 +6,7 @@ import { Minimatch, IMinimatch } from "minimatch";
 interface MatchConfig {
   all?: string[];
   any?: string[];
+  anyor?: string[];
 }
 
 type StringOrMatchConfig = string | MatchConfig;
@@ -198,6 +199,23 @@ function checkAny(changedFiles: string[], globs: string[]): boolean {
   return false;
 }
 
+function checkAnyOr(changedFiles: string[], globs: string[]): boolean {
+  const matchers = globs.map((g) => new Minimatch(g));
+  core.debug(`  checking "anyor" patterns`);
+
+  for (const changedFile of changedFiles) {
+    if (isMatch(changedFile, matchers)) {
+      core.debug(`  "anyor" patterns matched against ${changedFile}`);
+    } else {
+      core.debug(`  "anyor" patterns does not match against ${changedFile}`);
+      return false;
+    }
+  }
+  core.debug(`  "anyor" pattern did match all files`);
+  return true;
+}
+
+
 // equivalent to "Array.every()" but expanded for debugging and clarity
 function checkAll(changedFiles: string[], globs: string[]): boolean {
   const matchers = globs.map((g) => new Minimatch(g));
@@ -214,6 +232,13 @@ function checkAll(changedFiles: string[], globs: string[]): boolean {
 }
 
 function checkMatch(changedFiles: string[], matchConfig: MatchConfig): boolean {
+
+  if (matchConfig.anyor !== undefined) {
+    if (!checkAnyOr(changedFiles, matchConfig.anyor)) {
+      return false;
+    }
+  }
+
   if (matchConfig.all !== undefined) {
     if (!checkAll(changedFiles, matchConfig.all)) {
       return false;
