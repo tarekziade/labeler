@@ -215,7 +215,6 @@ function checkAnyOr(changedFiles: string[], globs: string[]): boolean {
   return true;
 }
 
-
 // equivalent to "Array.every()" but expanded for debugging and clarity
 function checkAll(changedFiles: string[], globs: string[]): boolean {
   const matchers = globs.map((g) => new Minimatch(g));
@@ -232,7 +231,6 @@ function checkAll(changedFiles: string[], globs: string[]): boolean {
 }
 
 function checkMatch(changedFiles: string[], matchConfig: MatchConfig): boolean {
-
   if (matchConfig.anyor !== undefined) {
     if (!checkAnyOr(changedFiles, matchConfig.anyor)) {
       return false;
