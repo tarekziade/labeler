@@ -194,6 +194,8 @@ function isMatch(changedFile: string, matchers: IMinimatch[]): boolean {
     if (!matcher.match(changedFile)) {
       core.debug(`   ${printPattern(matcher)} did not match`);
       return false;
+    } else {
+      core.debug(`   ${printPattern(matcher)} matched`);
     }
   }
 

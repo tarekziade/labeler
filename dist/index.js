@@ -188,6 +188,9 @@ function isMatch(changedFile, matchers) {
             core.debug(`   ${printPattern(matcher)} did not match`);
             return false;
         }
+        else {
+            core.debug(`   ${printPattern(matcher)} matched`);
+        }
     }
     core.debug(`   all patterns matched`);
     return true;
