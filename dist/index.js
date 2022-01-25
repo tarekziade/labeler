@@ -269,12 +269,17 @@ function addLabels(client, prNumber, labels) {
 function removeLabels(client, prNumber, labels) {
     return __awaiter(this, void 0, void 0, function* () {
         core.debug(`Removing labels ${labels}`);
-        yield Promise.all(labels.map((label) => client.rest.issues.removeLabel({
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            issue_number: prNumber,
-            name: label,
-        })));
+        yield Promise.all(labels.map((label) => {
+            // TODO: add a global option to list labels that cannot be removed 
+            if (label !== 'ci:skip-tests') {
+                return client.rest.issues.removeLabel({
+                    owner: github.context.repo.owner,
+                    repo: github.context.repo.repo,
+                    issue_number: prNumber,
+                    name: label,
+                });
+            }
+        }));
     });
 }
 

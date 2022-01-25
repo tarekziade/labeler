@@ -295,13 +295,17 @@ async function removeLabels(
   core.debug(`Removing labels ${labels}`)
 
   await Promise.all(
-    labels.map((label) =>
-      client.rest.issues.removeLabel({
-        owner: github.context.repo.owner,
-        repo: github.context.repo.repo,
-        issue_number: prNumber,
-        name: label,
-      })
+    labels.map((label) => {
+      // TODO: add a global option to list labels that cannot be removed
+      if (label !== 'ci:skip-tests') {
+        return client.rest.issues.removeLabel({
+          owner: github.context.repo.owner,
+          repo: github.context.repo.repo,
+          issue_number: prNumber,
+          name: label,
+        })
+      }
+      }
     )
   );
 }
