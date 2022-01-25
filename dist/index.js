@@ -75,6 +75,7 @@ function run() {
                 yield addLabels(client, prNumber, labels);
             }
             if (syncLabels && labelsToRemove.length) {
+                core.debug(`syncLabels is ${syncLabels}`);
                 yield removeLabels(client, prNumber, labelsToRemove);
             }
         }
@@ -256,6 +257,7 @@ function checkMatch(changedFiles, matchConfig) {
 }
 function addLabels(client, prNumber, labels) {
     return __awaiter(this, void 0, void 0, function* () {
+        core.debug(`adding labels ${labels}`);
         yield client.rest.issues.addLabels({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -266,6 +268,7 @@ function addLabels(client, prNumber, labels) {
 }
 function removeLabels(client, prNumber, labels) {
     return __awaiter(this, void 0, void 0, function* () {
+        core.debug(`Removing labels ${labels}`);
         yield Promise.all(labels.map((label) => client.rest.issues.removeLabel({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,

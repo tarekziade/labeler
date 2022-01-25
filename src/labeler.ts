@@ -55,6 +55,7 @@ export async function run() {
     }
 
     if (syncLabels && labelsToRemove.length) {
+      core.debug(`syncLabels is ${syncLabels}`)
       await removeLabels(client, prNumber, labelsToRemove);
     }
   } catch (error: any) {
@@ -276,6 +277,8 @@ async function addLabels(
   prNumber: number,
   labels: string[]
 ) {
+  core.debug(`adding labels ${labels}`)
+
   await client.rest.issues.addLabels({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
@@ -289,6 +292,8 @@ async function removeLabels(
   prNumber: number,
   labels: string[]
 ) {
+  core.debug(`Removing labels ${labels}`)
+
   await Promise.all(
     labels.map((label) =>
       client.rest.issues.removeLabel({
